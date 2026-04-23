@@ -26,8 +26,8 @@ body.index-view #main-gnb { background-color: transparent; backdrop-filter: none
 
 /* 어바웃, 워크 페이지에서 GNB 반투명 + 블러(Frosted Glass) 효과 */
 body.about-view #main-gnb, body.work-view #main-gnb {
-    background-color: rgba(16, 16, 16, 0.4); /* 배경을 살짝 더 투명하게 */
-    backdrop-filter: blur(15px); /* 블러를 강하게 주어 비치지만 글씨는 잘 보이게 */
+    background-color: rgba(16, 16, 16, 0.4); 
+    backdrop-filter: blur(15px); 
     -webkit-backdrop-filter: blur(15px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -71,21 +71,20 @@ body.index-view .home-icon { color: #000; }
 }
 
 /* 섹션별 배경색 */
-#sec-index { z-index: 10; background-color: #fafafa; } 
+#sec-index { z-index: 10; background-color: transparent; } /* 투명으로 복구하여 뒤의 노란 배경이 완벽히 비치게 함 */
 #sec-about { z-index: 20; background-color: #101010; color: #ebebeb; transform: translateX(100vw); }
 #sec-work { z-index: 30; background-color: #101010; color: #ebebeb; transform: translateX(100vw); }
 
 /* [모바일 전용 레이아웃: 완벽한 올 버티컬] */
 @media (max-width: 767px) {
     #main-content {
-        /* JS에서 포지션을 컨트롤하므로 높이와 오버플로우만 자연스럽게 풀어줌 */
         height: auto;
         overflow: visible;
         padding-bottom: 50px;
     }
 
     .h-section {
-        position: relative !important; /* 데스크톱의 강제 위치를 모두 무력화 */
+        position: relative !important; 
         top: auto;
         left: auto;
         width: 100%;
@@ -94,7 +93,6 @@ body.index-view .home-icon { color: #000; }
         transform: none !important; 
         opacity: 1 !important;
         overflow: visible !important;
-        /* 섹션 간의 구분을 위해 미세한 여백과 라인 추가 */
         border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
     
