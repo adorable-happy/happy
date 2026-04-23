@@ -58,6 +58,7 @@ body.index-view .home-icon { color: #000; }
     position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
     overflow-y: auto; scrollbar-width: none;
     will-change: transform, opacity;
+    /* 모바일 기본 패딩 (GNB 공간 확보) */
     padding: 100px 24px 60px; 
 }
 .h-section::-webkit-scrollbar { display: none; }
@@ -67,40 +68,9 @@ body.index-view .home-icon { color: #000; }
 }
 
 /* 섹션별 배경색 */
-#sec-index { z-index: 10; background-color: #fafafa; } /* 인덱스는 덮이는 느낌을 위해 불투명 배경색 지정 */
+#sec-index { z-index: 10; background-color: transparent; }
 #sec-about { z-index: 20; background-color: #101010; color: #ebebeb; transform: translateX(100vw); }
 #sec-work { z-index: 30; background-color: #101010; color: #ebebeb; transform: translateX(100vw); }
-
-/* [모바일 전용 수직 스택 인터랙션] */
-@media (max-width: 767px) {
-    #main-content {
-        position: relative;
-        transform: none !important;
-        overflow: visible;
-        height: auto;
-    }
-
-    .h-section {
-        position: sticky; /* 상단 고정 효과 */
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        transform: none !important; /* JS의 가로이동 무시 */
-        opacity: 1 !important;
-        display: flex;
-        flex-direction: column;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    #sec-index { position: relative; z-index: 10; }
-    #sec-about { z-index: 20; }
-    #sec-work { z-index: 30; }
-
-    /* 모바일 필터 버튼 두 줄 처리 */
-    .filter-nav { flex-wrap: wrap; gap: 15px 20px; overflow-x: visible; }
-    .filter-nav .filter-btn[data-filter="all"] { flex-basis: 100%; text-align: left; }
-}
 
 /* --- [4] ABOUT & WORK 페이지 공통 요소 --- */
 .skill-tag { 
@@ -116,6 +86,12 @@ body.index-view .home-icon { color: #000; }
     font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; transition: 0.3s; white-space: nowrap;
 }
 .filter-btn:hover, .filter-btn.active { color: #febf14; }
+
+/* 모바일 필터 버튼 두 줄 처리 */
+@media (max-width: 768px) {
+    .filter-nav { flex-wrap: wrap; gap: 15px 20px; overflow-x: visible; }
+    .filter-nav .filter-btn[data-filter="all"] { flex-basis: 100%; text-align: left; }
+}
 
 .project-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 40px; }
 @media (min-width: 768px) { .project-grid { grid-template-columns: repeat(2, 1fr); } }
