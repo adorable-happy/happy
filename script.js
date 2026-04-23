@@ -5,16 +5,25 @@ window.addEventListener('load', () => {
         requestAnimationFrame(() => { transLayer.style.left = '-100%'; });
     }
 
-    // 네비게이션 점프 이동 (딜레이 구간 반영하여 좌표 설정)
+    // 네비게이션 점프 이동
     window.scrollToSection = (index) => {
+        const isMobile = window.innerWidth < 768;
         const introScroll = window.innerHeight * 7.5;
-        const pauseScroll = window.innerHeight * 1.5;
-        const moveScroll = window.innerHeight * 2;
         
         let targetScroll = 0;
-        if (index === 0) targetScroll = introScroll; 
-        if (index === 1) targetScroll = introScroll + pauseScroll + moveScroll; 
-        if (index === 2) targetScroll = introScroll + (pauseScroll * 2) + (moveScroll * 2); 
+        if (isMobile) {
+            // 모바일은 단순한 높이 합산
+            if (index === 0) targetScroll = introScroll;
+            if (index === 1) targetScroll = introScroll + window.innerHeight;
+            if (index === 2) targetScroll = introScroll + (window.innerHeight * 2);
+        } else {
+            // 데스크톱은 기존 딜레이 계산
+            const pauseScroll = window.innerHeight * 1.5;
+            const moveScroll = window.innerHeight * 2;
+            if (index === 0) targetScroll = introScroll; 
+            if (index === 1) targetScroll = introScroll + pauseScroll + moveScroll; 
+            if (index === 2) targetScroll = introScroll + (pauseScroll * 2) + (moveScroll * 2); 
+        }
         
         window.scrollTo({ top: targetScroll, behavior: 'smooth' });
     };
@@ -27,7 +36,6 @@ window.addEventListener('load', () => {
     const faceImg = document.getElementById('face-img');
     const expandCircle = document.getElementById('expanding-circle');
     const mainContent = document.getElementById('main-content');
-    const introContainer = document.getElementById('intro-container'); // 추가: 스마일 이미지 컨테이너
     const gnb = document.getElementById('main-gnb');
     const navAbout = document.getElementById('nav-about');
     const navWork = document.getElementById('nav-work');
@@ -36,20 +44,23 @@ window.addEventListener('load', () => {
     const secAbout = document.getElementById('sec-about');
     const secWork = document.getElementById('sec-work');
 
-    // [1] 스크롤 계산 함수 (인트로 + 가로 스크롤 + 입체 화면 전환 + 세로 스크롤 제어)
     function updateScroll() {
-        const introScroll = window.innerHeight * 7.5; // 인트로 애니메이션
-        const pauseScroll = window.innerHeight * 1.5; // 잠시 멈추는 여유 구간
-        const moveScroll = window.innerHeight * 2; // 각 페이지가 덮이는데 필요한 스크롤
+        const isMobile = window.innerWidth < 768;
+        const introScroll = window.innerHeight * 7.5;
+        const pauseScroll = window.innerHeight * 1.5;
+        const moveScroll = window.innerHeight * 2;
 
         // 전체 스크롤 길이 업데이트
         if (scrollH) {
-            scrollH.style.height = `${introScroll + (pauseScroll * 2) + (moveScroll * 2) + window.innerHeight}px`;
+            const totalH = isMobile 
+                ? introScroll + (window.innerHeight * 3) 
+                : introScroll + (pauseScroll * 2) + (moveScroll * 2) + window.innerHeight;
+            scrollH.style.height = `${totalH}px`;
         }
 
         const scrollTop = window.scrollY;
         
-        // --- A. 인트로 애니메이션 ---
+        // --- A. 인트로 애니메이션 (공통) ---
         const progress = Math.min(scrollTop / introScroll, 1);
         if (progress <= 0.35) {
             const p1 = progress / 0.35;
@@ -57,108 +68,88 @@ window.addEventListener('load', () => {
             if (circleSvg) circleSvg.style.opacity = 1;
             if (faceImg) faceImg.style.opacity = 0;
             if (scrollGuide) { scrollGuide.style.opacity = 1 - p1; scrollGuide.style.visibility = 'visible'; }
-            if (introContainer) introContainer.style.opacity = 1; // 스마일 보이기
         } else if (progress > 0.35 && progress <= 0.55) {
             const p2 = (progress - 0.35) / 0.2;
             if (faceImg) faceImg.style.opacity = p2;
             if (circleSvg) circleSvg.style.opacity = 1;
             if (scrollGuide) { scrollGuide.style.opacity = 0; scrollGuide.style.visibility = 'hidden'; }
-            if (introContainer) introContainer.style.opacity = 1; // 스마일 보이기
         } else if (progress > 0.55 && progress <= 0.8) {
             const p3 = (progress - 0.55) / 0.25;
             if (expandCircle) expandCircle.style.transform = `translate(-50%, -50%) scale(${p3 * 500})`;
             if (circleSvg) circleSvg.style.opacity = p3 > 0.9 ? 0 : 1;
             if (mainContent) mainContent.classList.add('invisible');
-            if (introContainer) introContainer.style.opacity = 1; // 스마일 보이기
         } else {
             const p4 = (progress - 0.8) / 0.2;
             if (mainContent) {
                 mainContent.classList.remove('invisible');
-                mainContent.style.transform = `translateY(${(p4 - 1) * 100}%)`;
+                if (!isMobile) mainContent.style.transform = `translateY(${(p4 - 1) * 100}%)`;
+                else mainContent.style.transform = 'none';
             }
             if (p4 > 0.8 && gnb) { gnb.classList.remove('invisible'); gnb.style.opacity = 1; }
-            
-            // 🔥 추가된 로직: 모바일(768px 이하)에서 타이틀이 올라올 때 스마일 이미지 자연스럽게 페이드아웃
-            if (introContainer) {
-                if (window.innerWidth <= 768) {
-                    introContainer.style.opacity = Math.max(0, 1 - p4);
-                } else {
-                    introContainer.style.opacity = 1;
-                }
-            }
         }
 
-        // --- B. 입체 가로 전환 애니메이션 및 세로 스크롤 잠금 제어 ---
-        const afterIntroScroll = scrollTop - introScroll;
-
-        if (afterIntroScroll <= 0) {
-            if (secIndex) { secIndex.style.transform = `scale(1) translateX(0)`; secIndex.style.opacity = 1; secIndex.style.overflowY = 'auto'; }
-            if (secAbout) { secAbout.style.transform = `translateX(100vw)`; secAbout.style.opacity = 1; secAbout.style.overflowY = 'hidden'; }
-            if (secWork) { secWork.style.transform = `translateX(100vw)`; secWork.style.overflowY = 'hidden'; }
-            document.body.className = 'index-view';
-        } 
-        else if (afterIntroScroll > 0 && afterIntroScroll <= pauseScroll) {
-            if (secIndex) { secIndex.style.transform = `scale(1) translateX(0)`; secIndex.style.opacity = 1; secIndex.style.overflowY = 'auto'; }
-            if (secAbout) { secAbout.style.transform = `translateX(100vw)`; secAbout.style.opacity = 1; secAbout.style.overflowY = 'hidden'; }
-            if (secWork) { secWork.style.transform = `translateX(100vw)`; secWork.style.overflowY = 'hidden'; }
-            document.body.className = 'index-view';
-        } 
-        else if (afterIntroScroll > pauseScroll && afterIntroScroll <= pauseScroll + moveScroll) {
-            const slideScroll = afterIntroScroll - pauseScroll;
-            const p = slideScroll / moveScroll; 
-
-            if (secIndex) {
-                secIndex.style.transform = `scale(${1 - p * 0.05}) translateX(-${p * 15}vw)`;
-                secIndex.style.opacity = 1 - p * 0.8;
-                secIndex.style.overflowY = 'hidden';
+        // --- B. 화면 전환 로직 ---
+        if (isMobile) {
+            // [모바일 모드] GNB 활성화 상태만 체크
+            const currentPos = scrollTop - introScroll;
+            if (currentPos < window.innerHeight) {
+                document.body.className = 'index-view';
+                if (navAbout) navAbout.classList.remove('active');
+                if (navWork) navWork.classList.remove('active');
+            } else if (currentPos < window.innerHeight * 2) {
+                document.body.className = 'about-view';
+                if (navAbout) navAbout.classList.add('active');
+                if (navWork) navWork.classList.remove('active');
+            } else {
+                document.body.className = 'work-view';
+                if (navAbout) navAbout.classList.remove('active');
+                if (navWork) navWork.classList.add('active');
             }
-            if (secAbout) {
-                secAbout.style.transform = `translateX(${100 - p * 100}vw)`;
-                secAbout.style.opacity = 1;
-                secAbout.style.overflowY = 'hidden';
+        } else {
+            // [데스크톱 모드] 기존 입체 전환 애니메이션
+            const afterIntroScroll = scrollTop - introScroll;
+
+            if (afterIntroScroll <= 0) {
+                if (secIndex) { secIndex.style.transform = `scale(1) translateX(0)`; secIndex.style.opacity = 1; }
+                if (secAbout) { secAbout.style.transform = `translateX(100vw)`; secAbout.style.opacity = 1; }
+                if (secWork) { secWork.style.transform = `translateX(100vw)`; }
+                document.body.className = 'index-view';
+            } 
+            else if (afterIntroScroll > 0 && afterIntroScroll <= pauseScroll) {
+                if (secIndex) { secIndex.style.transform = `scale(1) translateX(0)`; secIndex.style.opacity = 1; }
+                if (secAbout) { secAbout.style.transform = `translateX(100vw)`; }
+                document.body.className = 'index-view';
+            } 
+            else if (afterIntroScroll > pauseScroll && afterIntroScroll <= pauseScroll + moveScroll) {
+                const slideScroll = afterIntroScroll - pauseScroll;
+                const p = slideScroll / moveScroll; 
+                if (secIndex) { secIndex.style.transform = `scale(${1 - p * 0.05}) translateX(-${p * 15}vw)`; secIndex.style.opacity = 1 - p * 0.8; }
+                if (secAbout) { secAbout.style.transform = `translateX(${100 - p * 100}vw)`; secAbout.style.opacity = 1; }
+                document.body.className = p > 0.5 ? 'about-view' : 'index-view';
+                if (navAbout) navAbout.classList.toggle('active', p > 0.5);
             }
-            if (secWork) { secWork.style.transform = `translateX(100vw)`; secWork.style.overflowY = 'hidden'; }
-
-            document.body.className = p > 0.5 ? 'about-view' : 'index-view';
-            if (navAbout) navAbout.classList.toggle('active', p > 0.5);
-            if (navWork) navWork.classList.remove('active');
-        }
-        else if (afterIntroScroll > pauseScroll + moveScroll && afterIntroScroll <= (pauseScroll * 2) + moveScroll) {
-            if (secIndex) { secIndex.style.opacity = 0; secIndex.style.overflowY = 'hidden'; }
-            if (secAbout) { secAbout.style.transform = `scale(1) translateX(0)`; secAbout.style.opacity = 1; secAbout.style.overflowY = 'auto'; }
-            if (secWork) { secWork.style.transform = `translateX(100vw)`; secWork.style.overflowY = 'hidden'; }
-
-            document.body.className = 'about-view';
-            if (navAbout) navAbout.classList.add('active');
-            if (navWork) navWork.classList.remove('active');
-        }
-        else if (afterIntroScroll > (pauseScroll * 2) + moveScroll && afterIntroScroll <= (pauseScroll * 2) + (moveScroll * 2)) {
-            const slideScroll = afterIntroScroll - ((pauseScroll * 2) + moveScroll);
-            const p = slideScroll / moveScroll; 
-
-            if (secIndex) { secIndex.style.opacity = 0; secIndex.style.overflowY = 'hidden'; }
-            if (secAbout) {
-                secAbout.style.transform = `scale(${1 - p * 0.05}) translateX(-${p * 15}vw)`;
-                secAbout.style.opacity = 1 - p * 0.8;
-                secAbout.style.overflowY = 'hidden';
+            else if (afterIntroScroll > pauseScroll + moveScroll && afterIntroScroll <= (pauseScroll * 2) + moveScroll) {
+                if (secAbout) { secAbout.style.transform = `scale(1) translateX(0)`; secAbout.style.opacity = 1; }
+                if (secWork) { secWork.style.transform = `translateX(100vw)`; }
+                document.body.className = 'about-view';
+                if (navAbout) navAbout.classList.add('active');
+                if (navWork) navWork.classList.remove('active');
             }
-            if (secWork) {
-                secWork.style.transform = `translateX(${100 - p * 100}vw)`;
-                secWork.style.overflowY = 'hidden';
+            else if (afterIntroScroll > (pauseScroll * 2) + moveScroll && afterIntroScroll <= (pauseScroll * 2) + (moveScroll * 2)) {
+                const slideScroll = afterIntroScroll - ((pauseScroll * 2) + moveScroll);
+                const p = slideScroll / moveScroll; 
+                if (secAbout) { secAbout.style.transform = `scale(${1 - p * 0.05}) translateX(-${p * 15}vw)`; secAbout.style.opacity = 1 - p * 0.8; }
+                if (secWork) { secWork.style.transform = `translateX(${100 - p * 100}vw)`; }
+                document.body.className = p > 0.5 ? 'work-view' : 'about-view';
+                if (navAbout) navAbout.classList.toggle('active', p <= 0.5);
+                if (navWork) navWork.classList.toggle('active', p > 0.5);
             }
-
-            document.body.className = p > 0.5 ? 'work-view' : 'about-view';
-            if (navAbout) navAbout.classList.toggle('active', p <= 0.5);
-            if (navWork) navWork.classList.toggle('active', p > 0.5);
-        }
-        else {
-            if (secIndex) { secIndex.style.opacity = 0; secIndex.style.overflowY = 'hidden'; }
-            if (secAbout) { secAbout.style.transform = `scale(0.95) translateX(-15vw)`; secAbout.style.opacity = 0; secAbout.style.overflowY = 'hidden'; }
-            if (secWork) { secWork.style.transform = `translateX(0)`; secWork.style.overflowY = 'auto'; }
-
-            document.body.className = 'work-view';
-            if (navAbout) navAbout.classList.remove('active');
-            if (navWork) navWork.classList.add('active');
+            else {
+                if (secWork) { secWork.style.transform = `translateX(0)`; }
+                document.body.className = 'work-view';
+                if (navAbout) navAbout.classList.remove('active');
+                if (navWork) navWork.classList.add('active');
+            }
         }
     }
 
@@ -166,7 +157,7 @@ window.addEventListener('load', () => {
     window.addEventListener('resize', updateScroll);
     updateScroll();
 
-    // [2] Work Page (Sanity 연동 및 순차 등장 애니메이션)
+    // Work Page (Sanity 연동)
     const createClient = window.createClient;
     const imageUrlBuilder = window.imageUrlBuilder;
 
@@ -196,20 +187,11 @@ window.addEventListener('load', () => {
                 renderProjects(allProjects);
             } catch (err) {
                 console.error('프로젝트 로딩 실패:', err);
-                if (container) container.innerHTML = `<p class="text-red-500 text-center py-20 col-span-full">데이터 로드 실패</p>`;
             }
         }
 
         function renderProjects(list) {
             if (!container) return;
-            
-            container.innerHTML = ''; 
-            
-            if (!list || list.length === 0) {
-                container.innerHTML = `<p class="py-20 text-center col-span-full">프로젝트가 없습니다.</p>`;
-                return;
-            }
-
             container.innerHTML = list.map(project => `
                 <div class="project-card" data-id="${project._id}">
                     <div class="img-box">
@@ -224,11 +206,8 @@ window.addEventListener('load', () => {
 
             const cards = container.querySelectorAll('.project-card');
             cards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.classList.add('is-visible');
-                }, index * 100);
+                setTimeout(() => { card.classList.add('is-visible'); }, index * 100);
             });
-
             bindProjectClicks();
         }
 
@@ -247,16 +226,8 @@ window.addEventListener('load', () => {
             detailTitle.textContent = project.title || '';
             detailCategory.textContent = project.category || '';
             detailDescription.textContent = project.description || '';
-
             const detailImageData = project.contentImages || project.detailImages || [];
-            if (detailImageData.length > 0) {
-                detailImages.innerHTML = detailImageData.map(img => `
-                    <img src="${urlFor(img).width(1600).url()}" alt="detail">
-                `).join('');
-            } else {
-                detailImages.innerHTML = `<p class="text-white text-center py-10">상세 이미지가 없습니다.</p>`;
-            }
-            
+            detailImages.innerHTML = detailImageData.map(img => `<img src="${urlFor(img).width(1600).url()}" alt="detail">`).join('');
             document.body.style.overflow = 'hidden'; 
             detailWrap.scrollTop = 0;
         }
@@ -272,19 +243,9 @@ window.addEventListener('load', () => {
             button.addEventListener('click', () => {
                 document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
-
-                const currentCards = container.querySelectorAll('.project-card');
-                currentCards.forEach(card => {
-                    card.classList.remove('is-visible');
-                    card.style.transform = 'translateY(20px)';
-                    card.style.opacity = '0';
-                });
-
-                setTimeout(() => {
-                    const filter = button.dataset.filter;
-                    const filtered = filter === 'all' ? allProjects : allProjects.filter(p => p.category === filter);
-                    renderProjects(filtered);
-                }, 400); 
+                const filter = button.dataset.filter;
+                const filtered = filter === 'all' ? allProjects : allProjects.filter(p => p.category === filter);
+                renderProjects(filtered);
             });
         });
 
