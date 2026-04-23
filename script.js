@@ -19,7 +19,7 @@ window.addEventListener('load', () => {
     const secAbout = document.getElementById('sec-about');
     const secWork = document.getElementById('sec-work');
 
-    // 네비게이션 점프 이동 (모바일/데스크톱 로직 분리)
+    // 네비게이션 점프 이동
     window.scrollToSection = (index) => {
         const isMobile = window.innerWidth < 768;
         const introScroll = window.innerHeight * 7.5;
@@ -27,8 +27,8 @@ window.addEventListener('load', () => {
         let targetScroll = 0;
         if (isMobile) {
             if (index === 0) targetScroll = introScroll;
-            if (index === 1) targetScroll = introScroll + secAbout.offsetTop;
-            if (index === 2) targetScroll = introScroll + secWork.offsetTop;
+            if (index === 1) targetScroll = introScroll + (secAbout ? secAbout.offsetTop : 0);
+            if (index === 2) targetScroll = introScroll + (secWork ? secWork.offsetTop : 0);
         } else {
             const pauseScroll = window.innerHeight * 1.5;
             const moveScroll = window.innerHeight * 2;
@@ -45,25 +45,19 @@ window.addEventListener('load', () => {
         const pauseScroll = window.innerHeight * 1.5;
         const moveScroll = window.innerHeight * 2;
 
-        // 모바일은 내부 컨텐츠 높이만큼 자연스럽게 늘어나게 둠
+        // 전체 스크롤 길이 업데이트
         if (scrollH) {
-            scrollH.style.height = isMobile 
-                ? `${introScroll}px` 
-                : `${introScroll + (pauseScroll * 2) + (moveScroll * 2) + window.innerHeight}px`;
+            if (isMobile) {
+                // 모바일: 인트로 + 컨텐츠 실제 높이만큼 자연스럽게 생성
+                const contentH = mainContent ? mainContent.offsetHeight : window.innerHeight * 3;
+                scrollH.style.height = `${introScroll + contentH}px`;
+            } else {
+                // 데스크톱: 기존 애니메이션 딜레이 포함 높이
+                scrollH.style.height = `${introScroll + (pauseScroll * 2) + (moveScroll * 2) + window.innerHeight}px`;
+            }
         }
 
         const scrollTop = window.scrollY;
-        
-        // 메인 컨텐츠 시작 위치 보정 (안정화)
-        if (mainContent) {
-            if (isMobile) {
-                mainContent.style.position = 'absolute';
-                mainContent.style.top = `${introScroll}px`;
-            } else {
-                mainContent.style.position = 'fixed';
-                mainContent.style.top = '0px';
-            }
-        }
 
         // --- A. 인트로 애니메이션 ---
         const progress = Math.min(scrollTop / introScroll, 1);
@@ -87,27 +81,48 @@ window.addEventListener('load', () => {
             const p4 = (progress - 0.8) / 0.2;
             if (mainContent) {
                 mainContent.classList.remove('invisible');
-                if (!isMobile) mainContent.style.transform = `translateY(${(p4 - 1) * 100}%)`;
-                else mainContent.style.transform = 'none';
+                
+                if (isMobile) {
+                    // [모바일 핵심 로직] 
+                    if (progress < 1) {
+                        // 1. 인트로 중에는 화면에 고정(fixed)되어 덮이듯 내려옴
+                        mainContent.style.position = 'fixed';
+                        mainContent.style.top = '0px';
+                        mainContent.style.transform = `translateY(${(p4 - 1) * 100}%)`;
+                    } else {
+                        // 2. 완전히 다 내려오면 일반 컨텐츠(absolute)로 변신하여 자연스럽게 스크롤되도록 연결
+                        mainContent.style.position = 'absolute';
+                        mainContent.style.top = `${introScroll}px`;
+                        mainContent.style.transform = 'translateY(0)';
+                    }
+                } else {
+                    // 데스크톱은 기존처럼 계속 Fixed 유지
+                    mainContent.style.position = 'fixed';
+                    mainContent.style.top = '0px';
+                    mainContent.style.transform = `translateY(${(p4 - 1) * 100}%)`;
+                }
             }
             if (p4 > 0.8 && gnb) { gnb.classList.remove('invisible'); gnb.style.opacity = 1; }
         }
 
         // --- B. 화면 전환 로직 ---
         if (isMobile) {
-            // [모바일] 인라인 스타일 강제 리셋 (데스크톱 흔적 지우기)
-            if (secIndex) { secIndex.style.transform = 'none'; secIndex.style.opacity = 1; secIndex.style.overflowY = 'visible'; }
-            if (secAbout) { secAbout.style.transform = 'none'; secAbout.style.opacity = 1; secAbout.style.overflowY = 'visible'; }
-            if (secWork) { secWork.style.transform = 'none'; secWork.style.opacity = 1; secWork.style.overflowY = 'visible'; }
+            // [모바일] 데스크톱에서 남은 인라인 스타일 찌꺼기 청소
+            if (secIndex) { secIndex.style.transform = 'none'; secIndex.style.opacity = 1; }
+            if (secAbout) { secAbout.style.transform = 'none'; secAbout.style.opacity = 1; }
+            if (secWork) { secWork.style.transform = 'none'; secWork.style.opacity = 1; }
 
-            // GNB 메뉴 활성화 체크 (화면 절반 기준)
-            if (secAbout && secWork) {
-                const triggerPoint = window.innerHeight * 0.5;
-                if (secWork.getBoundingClientRect().top < triggerPoint) {
+            // 스크롤 위치를 읽어서 GNB 메뉴 활성화 상태만 업데이트 (블러 효과 트리거)
+            if (progress >= 1 && secAbout && secWork) {
+                const scrollPastIntro = scrollTop - introScroll;
+                // 메뉴가 바뀌는 민감도 조절 (화면 1/3 지점)
+                const triggerOffset = window.innerHeight * 0.3; 
+                
+                if (scrollPastIntro >= secWork.offsetTop - triggerOffset) {
                     document.body.className = 'work-view';
                     if (navAbout) navAbout.classList.remove('active');
                     if (navWork) navWork.classList.add('active');
-                } else if (secAbout.getBoundingClientRect().top < triggerPoint) {
+                } else if (scrollPastIntro >= secAbout.offsetTop - triggerOffset) {
                     document.body.className = 'about-view';
                     if (navAbout) navAbout.classList.add('active');
                     if (navWork) navWork.classList.remove('active');
@@ -118,7 +133,7 @@ window.addEventListener('load', () => {
                 }
             }
         } else {
-            // [데스크톱] 기존의 부드러운 가로 슬라이드 및 스크롤 제어
+            // [데스크톱] 기존의 입체 스크롤 (건드리지 않음!)
             const afterIntroScroll = scrollTop - introScroll;
 
             if (afterIntroScroll <= 0) {
@@ -176,7 +191,7 @@ window.addEventListener('load', () => {
     window.addEventListener('resize', updateScroll);
     updateScroll();
 
-    // Work Page (Sanity 연동)
+    // Work Page (Sanity 연동 부분 - 기존 유지)
     const createClient = window.createClient;
     const imageUrlBuilder = window.imageUrlBuilder;
 

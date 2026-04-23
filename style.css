@@ -15,7 +15,7 @@ body::-webkit-scrollbar { display: none; }
     transition: left 0.6s cubic-bezier(0.65, 0, 0.35, 1); 
 }
 
-/* --- [2] GNB 디자인 --- */
+/* --- [2] GNB 디자인 (반투명 블러 효과 적용) --- */
 #main-gnb { 
     position: fixed; top: 0; left: 0; width: 100%; height: 80px; 
     z-index: 1000; display: flex; align-items: center; justify-content: center;
@@ -23,9 +23,13 @@ body::-webkit-scrollbar { display: none; }
 }
 
 body.index-view #main-gnb { background-color: transparent; backdrop-filter: none; border-bottom: none; }
+
+/* 어바웃, 워크 페이지에서 GNB 반투명 + 블러(Frosted Glass) 효과 */
 body.about-view #main-gnb, body.work-view #main-gnb {
-    background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: rgba(16, 16, 16, 0.4); /* 배경을 살짝 더 투명하게 */
+    backdrop-filter: blur(15px); /* 블러를 강하게 주어 비치지만 글씨는 잘 보이게 */
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .gnb-menu a { 
@@ -71,34 +75,30 @@ body.index-view .home-icon { color: #000; }
 #sec-about { z-index: 20; background-color: #101010; color: #ebebeb; transform: translateX(100vw); }
 #sec-work { z-index: 30; background-color: #101010; color: #ebebeb; transform: translateX(100vw); }
 
-/* [모바일 전용 레이아웃 최적화: 버그 해결] */
+/* [모바일 전용 레이아웃: 완벽한 올 버티컬] */
 @media (max-width: 767px) {
     #main-content {
-        transform: none !important;
-        overflow: visible;
+        /* JS에서 포지션을 컨트롤하므로 높이와 오버플로우만 자연스럽게 풀어줌 */
         height: auto;
+        overflow: visible;
+        padding-bottom: 50px;
     }
 
     .h-section {
-        position: relative; /* 고정 해제하여 정상 스크롤 허용 */
-        width: 100vw;
+        position: relative !important; /* 데스크톱의 강제 위치를 모두 무력화 */
+        top: auto;
+        left: auto;
+        width: 100%;
         height: auto;
         min-height: 100vh;
         transform: none !important; 
         opacity: 1 !important;
         overflow: visible !important;
-    }
-
-    /* 첫 화면만 바닥에 고정시켜 덮이는 느낌 연출 */
-    #sec-index {
-        position: sticky;
-        top: 0;
-        height: 100vh; 
-        z-index: 10;
+        /* 섹션 간의 구분을 위해 미세한 여백과 라인 추가 */
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
     
-    #sec-about { z-index: 20; background-color: #101010; border-top: 1px solid rgba(255,255,255,0.05); }
-    #sec-work { z-index: 30; background-color: #101010; border-top: 1px solid rgba(255,255,255,0.05); }
+    #sec-index { border-top: none; }
 
     /* 모바일 필터 버튼 두 줄 처리 */
     .filter-nav { flex-wrap: wrap; gap: 15px 20px; overflow-x: visible; }
