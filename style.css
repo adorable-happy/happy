@@ -15,7 +15,7 @@ body::-webkit-scrollbar { display: none; }
     transition: left 0.6s cubic-bezier(0.65, 0, 0.35, 1); 
 }
 
-/* --- [2] GNB 디자인 (반투명 블러 효과 적용) --- */
+/* --- [2] GNB 디자인 --- */
 #main-gnb { 
     position: fixed; top: 0; left: 0; width: 100%; height: 80px; 
     z-index: 1000; display: flex; align-items: center; justify-content: center;
@@ -23,13 +23,9 @@ body::-webkit-scrollbar { display: none; }
 }
 
 body.index-view #main-gnb { background-color: transparent; backdrop-filter: none; border-bottom: none; }
-
-/* 어바웃, 워크 페이지에서 GNB 반투명 + 블러(Frosted Glass) 효과 */
 body.about-view #main-gnb, body.work-view #main-gnb {
-    background-color: rgba(0, 0, 0, 0.7); /* 요청하신 완전 블랙(#000000) 베이스의 반투명 */
-    backdrop-filter: blur(15px); 
-    -webkit-backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .gnb-menu a { 
@@ -62,6 +58,7 @@ body.index-view .home-icon { color: #000; }
     position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
     overflow-y: auto; scrollbar-width: none;
     will-change: transform, opacity;
+    /* 모바일 기본 패딩 (GNB 공간 확보) */
     padding: 100px 24px 60px; 
 }
 .h-section::-webkit-scrollbar { display: none; }
@@ -71,38 +68,9 @@ body.index-view .home-icon { color: #000; }
 }
 
 /* 섹션별 배경색 */
-#sec-index { z-index: 10; background-color: transparent; } 
-#sec-about { z-index: 20; background-color: #101010; color: #ebebeb; transform: translateX(100vw); } /* 요청하신 #101010 배경 */
-#sec-work { z-index: 30; background-color: #101010; color: #ebebeb; transform: translateX(100vw); } /* 요청하신 #101010 배경 */
-
-/* [모바일 전용 레이아웃: 완벽한 올 버티컬] */
-@media (max-width: 767px) {
-    #main-content {
-        height: auto;
-        overflow: visible;
-        padding-bottom: 50px;
-        transform: translateY(-100vh) !important;
-    }
-
-    .h-section {
-        position: relative !important; 
-        top: auto;
-        left: auto;
-        width: 100%;
-        height: auto;
-        min-height: 100vh;
-        transform: none !important; 
-        opacity: 1 !important;
-        overflow: visible !important;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    
-    #sec-index { border-top: none; }
-
-    /* 모바일 필터 버튼 두 줄 처리 */
-    .filter-nav { flex-wrap: wrap; gap: 15px 20px; overflow-x: visible; }
-    .filter-nav .filter-btn[data-filter="all"] { flex-basis: 100%; text-align: left; }
-}
+#sec-index { z-index: 10; background-color: transparent; }
+#sec-about { z-index: 20; background-color: #101010; color: #ebebeb; transform: translateX(100vw); }
+#sec-work { z-index: 30; background-color: #101010; color: #ebebeb; transform: translateX(100vw); }
 
 /* --- [4] ABOUT & WORK 페이지 공통 요소 --- */
 .skill-tag { 
@@ -118,6 +86,12 @@ body.index-view .home-icon { color: #000; }
     font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; transition: 0.3s; white-space: nowrap;
 }
 .filter-btn:hover, .filter-btn.active { color: #febf14; }
+
+/* 모바일 필터 버튼 두 줄 처리 */
+@media (max-width: 768px) {
+    .filter-nav { flex-wrap: wrap; gap: 15px 20px; overflow-x: visible; }
+    .filter-nav .filter-btn[data-filter="all"] { flex-basis: 100%; text-align: left; }
+}
 
 .project-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 40px; }
 @media (min-width: 768px) { .project-grid { grid-template-columns: repeat(2, 1fr); } }
