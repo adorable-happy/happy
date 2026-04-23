@@ -71,7 +71,7 @@ body.index-view .home-icon { color: #000; }
 }
 
 /* 섹션별 배경색 */
-#sec-index { z-index: 10; background-color: transparent; } /* 투명으로 복구하여 뒤의 노란 배경이 완벽히 비치게 함 */
+#sec-index { z-index: 10; background-color: transparent; } /* 투명 배경 유지 (노란색 캔버스 보임) */
 #sec-about { z-index: 20; background-color: #101010; color: #ebebeb; transform: translateX(100vw); }
 #sec-work { z-index: 30; background-color: #101010; color: #ebebeb; transform: translateX(100vw); }
 
@@ -81,6 +81,8 @@ body.index-view .home-icon { color: #000; }
         height: auto;
         overflow: visible;
         padding-bottom: 50px;
+        /* 핵심 수정: %를 쓰면 전체 높이가 되어 뭉개짐. 화면 딱 1칸인 vh로 변경 */
+        transform: translateY(-100vh) !important;
     }
 
     .h-section {

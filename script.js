@@ -48,11 +48,11 @@ window.addEventListener('load', () => {
         // 전체 스크롤 길이 업데이트
         if (scrollH) {
             if (isMobile) {
-                // 모바일: 인트로 + 컨텐츠 실제 높이만큼 자연스럽게 생성
+                // 모바일: 인트로 + 컨텐츠 실제 높이만큼 
                 const contentH = mainContent ? mainContent.offsetHeight : window.innerHeight * 3;
                 scrollH.style.height = `${introScroll + contentH}px`;
             } else {
-                // 데스크톱: 기존 애니메이션 딜레이 포함 높이
+                // 데스크톱: 애니메이션 딜레이 포함 높이
                 scrollH.style.height = `${introScroll + (pauseScroll * 2) + (moveScroll * 2) + window.innerHeight}px`;
             }
         }
@@ -83,20 +83,18 @@ window.addEventListener('load', () => {
                 mainContent.classList.remove('invisible');
                 
                 if (isMobile) {
-                    // [모바일 핵심 로직] 
+                    // [모바일] 화면 뭉침 버그 해결! % 대신 화면 딱 1칸인 vh로 애니메이션
                     if (progress < 1) {
-                        // 1. 인트로 중에는 화면에 고정(fixed)되어 덮이듯 내려옴
                         mainContent.style.position = 'fixed';
                         mainContent.style.top = '0px';
-                        mainContent.style.transform = `translateY(${(p4 - 1) * 100}%)`;
+                        mainContent.style.transform = `translateY(${(p4 - 1) * 100}vh)`; 
                     } else {
-                        // 2. 완전히 다 내려오면 일반 컨텐츠(absolute)로 변신하여 자연스럽게 스크롤되도록 연결
                         mainContent.style.position = 'absolute';
                         mainContent.style.top = `${introScroll}px`;
                         mainContent.style.transform = 'translateY(0)';
                     }
                 } else {
-                    // 데스크톱은 기존처럼 계속 Fixed 유지
+                    // 데스크톱 유지
                     mainContent.style.position = 'fixed';
                     mainContent.style.top = '0px';
                     mainContent.style.transform = `translateY(${(p4 - 1) * 100}%)`;
@@ -107,15 +105,13 @@ window.addEventListener('load', () => {
 
         // --- B. 화면 전환 로직 ---
         if (isMobile) {
-            // [모바일] 데스크톱에서 남은 인라인 스타일 찌꺼기 청소
             if (secIndex) { secIndex.style.transform = 'none'; secIndex.style.opacity = 1; }
             if (secAbout) { secAbout.style.transform = 'none'; secAbout.style.opacity = 1; }
             if (secWork) { secWork.style.transform = 'none'; secWork.style.opacity = 1; }
 
-            // 스크롤 위치를 읽어서 GNB 메뉴 활성화 상태만 업데이트 (블러 효과 트리거)
+            // GNB 메뉴 활성화 상태 업데이트
             if (progress >= 1 && secAbout && secWork) {
                 const scrollPastIntro = scrollTop - introScroll;
-                // 메뉴가 바뀌는 민감도 조절 (화면 1/3 지점)
                 const triggerOffset = window.innerHeight * 0.3; 
                 
                 if (scrollPastIntro >= secWork.offsetTop - triggerOffset) {
@@ -133,7 +129,7 @@ window.addEventListener('load', () => {
                 }
             }
         } else {
-            // [데스크톱] 기존의 입체 스크롤 (건드리지 않음!)
+            // [데스크톱] 기존의 입체 스크롤 (손대지 않음!)
             const afterIntroScroll = scrollTop - introScroll;
 
             if (afterIntroScroll <= 0) {
@@ -191,7 +187,7 @@ window.addEventListener('load', () => {
     window.addEventListener('resize', updateScroll);
     updateScroll();
 
-    // Work Page (Sanity 연동 부분 - 기존 유지)
+    // Work Page (Sanity 연동 부분)
     const createClient = window.createClient;
     const imageUrlBuilder = window.imageUrlBuilder;
 
