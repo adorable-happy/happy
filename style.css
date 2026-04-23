@@ -1,0 +1,150 @@
+/* --- [1] 공통 초기화 & 기본 설정 --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { 
+    background-color: #000; 
+    font-family: "Pretendard", sans-serif; 
+    overflow-x: hidden; 
+    scrollbar-width: none;
+}
+body::-webkit-scrollbar { display: none; }
+
+#page-transition-layer { 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background-color: #000; z-index: 9999; pointer-events: none;
+    transition: left 0.6s cubic-bezier(0.65, 0, 0.35, 1); 
+}
+
+/* --- [2] GNB 디자인 --- */
+#main-gnb { 
+    position: fixed; top: 0; left: 0; width: 100%; height: 80px; 
+    z-index: 1000; display: flex; align-items: center; justify-content: center;
+    background-color: transparent; transition: background-color 0.4s ease, backdrop-filter 0.4s ease;
+}
+
+body.index-view #main-gnb { background-color: transparent; backdrop-filter: none; border-bottom: none; }
+body.about-view #main-gnb, body.work-view #main-gnb {
+    background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.gnb-menu a { 
+    text-decoration: none; font-size: 14px; margin: 0 20px; color: #888; 
+    font-weight: 600; position: relative; transition: color 0.3s;
+}
+
+body.index-view .gnb-menu a { color: #000; }
+body.about-view .gnb-menu a, body.work-view .gnb-menu a { color: #888; }
+.gnb-menu a.active, .gnb-menu a:hover { color: #ebebeb; }
+
+.gnb-menu a::after {
+    content: ''; position: absolute; left: 0; bottom: -12px; width: 0; height: 4px; 
+    background-color: #fff; transition: width 0.3s ease;
+}
+body.about-view .gnb-menu a::after, body.work-view .gnb-menu a::after { background-color: #febf14; }
+.gnb-menu a:hover::after, .gnb-menu a.active::after { width: 100%; }
+
+.home-icon { position: absolute; left: 40px; color: #febf14; opacity: 0.9; transition: 0.3s; }
+body.index-view .home-icon { color: #000; }
+
+/* --- [3] 입체적 화면 전환 (Stacking) 레이아웃 --- */
+#main-content {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 30; background: transparent; transform: translateY(-100%);
+    overflow: hidden;
+}
+
+.h-section {
+    position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+    overflow-y: auto; scrollbar-width: none;
+    will-change: transform, opacity;
+    /* 모바일 기본 패딩 (GNB 공간 확보) */
+    padding: 100px 24px 60px; 
+}
+.h-section::-webkit-scrollbar { display: none; }
+
+@media (min-width: 768px) {
+    .h-section { padding: 80px 40px; } 
+}
+
+/* 섹션별 배경색 */
+#sec-index { z-index: 10; background-color: transparent; }
+#sec-about { z-index: 20; background-color: #101010; color: #ebebeb; transform: translateX(100vw); }
+#sec-work { z-index: 30; background-color: #101010; color: #ebebeb; transform: translateX(100vw); }
+
+/* --- [4] ABOUT & WORK 페이지 공통 요소 --- */
+.skill-tag { 
+    display: inline-block; padding: 8px 16px; background-color: #1a1a1a; 
+    color: #ebebeb; border: 1px solid rgba(235, 235, 235, 0.1); border-radius: 8px; 
+    font-size: 12px; pointer-events: none; 
+}
+
+.filter-nav { display: flex; gap: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; overflow-x: auto; scrollbar-width: none; }
+.filter-nav::-webkit-scrollbar { display: none; }
+.filter-btn { 
+    background: none; border: none; cursor: pointer; color: #666; 
+    font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; transition: 0.3s; white-space: nowrap;
+}
+.filter-btn:hover, .filter-btn.active { color: #febf14; }
+
+.project-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 40px; }
+@media (min-width: 768px) { .project-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1200px) { .project-grid { grid-template-columns: repeat(3, 1fr); gap: 60px 40px; } }
+
+.project-card { 
+    cursor: pointer; opacity: 0; transform: translateY(40px);
+    transition: opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform, opacity;
+}
+.project-card.is-visible { opacity: 1; transform: translateY(0); }
+.project-card .img-box { width: 100%; aspect-ratio: 4/3; overflow: hidden; background-color: #1a1a1a; border-radius: 4px; margin-bottom: 20px; }
+.project-card img { width: 100%; height: 100%; object-fit: cover; transition: 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.project-card:hover img { transform: scale(1.1); }
+.project-card .info { display: flex; flex-direction: column; gap: 6px; }
+.project-card .cat { font-size: 11px; font-weight: 800; color: #febf14; text-transform: uppercase; letter-spacing: 0.1em; }
+.project-card .tit { font-size: 18px; font-weight: 600; color: #ebebeb; letter-spacing: -0.02em; }
+
+/* 상세 페이지 모달 */
+.project-detail { 
+    position: fixed; inset: 0; width: 100%; height: 100vh; overflow-y: auto; 
+    background: rgba(0,0,0,0.95); z-index: 99999; padding: 120px 40px 80px; 
+}
+.project-detail.hidden { display: none; }
+.detail-close-btn { 
+    position: fixed; top: 30px; right: 30px; border: none; background: #fff; 
+    color: #000; padding: 14px 20px; cursor: pointer; font-size: 12px; font-weight: 700; 
+    letter-spacing: 0.1em; text-transform: uppercase; z-index: 100000; 
+}
+.detail-inner { max-width: 1400px; margin: 0 auto; }
+.detail-text { margin-bottom: 80px; color: #fff; }
+.detail-category { color: #febf14; font-size: 12px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 20px; }
+.detail-title { font-size: 56px; font-weight: 700; line-height: 1.1; margin-bottom: 40px; }
+.detail-description { max-width: 900px; font-size: 18px; line-height: 1.9; color: rgba(255,255,255,0.8); white-space: pre-line; }
+.detail-images { display: flex; flex-direction: column; gap: 60px; }
+.detail-images img { width: 100%; display: block; border-radius: 6px; }
+
+@media (max-width: 768px) { 
+    .project-detail { padding: 100px 20px 60px; } 
+    .detail-title { font-size: 32px; } 
+    .detail-description { font-size: 15px; } 
+}
+
+/* --- [5] 인트로 인터랙션 --- */
+#viewport { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 10; overflow: hidden; background-color: #000; }
+#intro-container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center; z-index: 20; width: 100%; }
+.smile-wrapper { position: relative; width: 80vw; max-width: 550px; }
+#ghost-smile { position: relative; display: block; width: 100%; height: auto; opacity: 0.12; filter: grayscale(1); }
+.face-only { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 15; opacity: 0; }
+.circle-svg { position: absolute; inset: 0; z-index: 10; transform: rotate(-90deg) scaleY(-1); transition: opacity 0.4s; width: 100%; height: 100%; }
+#mask-path { stroke-dasharray: 1700; stroke-dashoffset: 1700; }
+#expanding-circle { 
+    position: absolute; top: 50%; left: 50%; width: 10px; height: 10px; 
+    background-color: #febf14; border-radius: 50%; transform: translate(-50%, -50%) scale(0); 
+    z-index: 5; pointer-events: none; 
+}
+
+#scroll-guide { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 100; color: #fff; text-align: center; transition: opacity 0.5s; }
+.mouse { width: 22px; height: 36px; border: 2px solid #fff; border-radius: 12px; margin: 0 auto 10px; position: relative; }
+.wheel { width: 2px; height: 7px; background: #fff; position: absolute; top: 6px; left: 50%; transform: translateX(-50%); animation: wheel-move 1.6s infinite; }
+@keyframes wheel-move { 0% { opacity: 1; top: 6px; } 100% { opacity: 0; top: 20px; } }
+.guide-text { font-size: 10px; letter-spacing: 0.15em; font-weight: 500; opacity: 0.7; text-transform: uppercase; }

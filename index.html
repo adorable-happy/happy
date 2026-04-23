@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>행복한 디자이너 김정미 :D</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="index-view">
+
+    <div id="page-transition-layer"></div>
+
+    <nav id="main-gnb" class="invisible opacity-0 transition-all duration-700">
+        <a href="javascript:void(0)" onclick="scrollToSection(0)" class="home-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+        </a>
+        <div class="gnb-inner">
+            <div class="gnb-menu">
+                <a href="javascript:void(0)" onclick="scrollToSection(1)" id="nav-about"><span>About MI</span></a>
+                <a href="javascript:void(0)" onclick="scrollToSection(2)" id="nav-work"><span>Happy</span></a>
+            </div>
+        </div>
+    </nav>
+
+    <div id="scroll-guide">
+        <div class="mouse"><div class="wheel"></div></div>
+        <p class="guide-text">SCROLL DOWN</p>
+    </div>
+
+    <div id="viewport">
+        <div id="intro-container">
+            <div class="smile-wrapper">
+                <img id="ghost-smile" src="images/smile02.png" alt="ghost smile">
+                <svg class="circle-svg" viewBox="0 0 550 550" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <mask id="circle-mask">
+                            <circle id="mask-path" cx="275" cy="275" r="270" fill="none" stroke="white" stroke-width="600" />
+                        </mask>
+                    </defs>
+                    <image href="images/smile00.png" width="550" height="550" mask="url(#circle-mask)" />
+                </svg>
+                <img id="face-img" src="images/smile02.png" class="face-only" alt="face color">
+            </div>
+        </div>
+        <div id="expanding-circle"></div>
+    </div>
+
+    <main id="main-content" class="invisible">
+        
+        <section id="sec-index" class="h-section flex flex-col justify-between px-8 pt-26 pb-20 md:px-24 md:py-32">
+            
+            <div class="content-header">
+                <p class="text-[11px] font-bold tracking-[0.2em] uppercase opacity-50">HISTORY</p>
+                <p class="text-[13px] mt-1 font-normal tracking-widest opacity-50">2009 - 2026</p>
+            </div>
+
+            <div class="content-body flex items-center py-10 md:py-0">
+                <h1 class="text-[20vw] sm:text-7xl md:text-[140px] font-extrabold md:font-bold tracking-tighter leading-[1.05] md:leading-[0.9] text-black">
+                    행복을<br class="md:hidden" /> 
+                    그리는<br />
+                    <span class="text-white">디자이너.</span>
+                </h1>
+            </div>
+
+            <div class="content-footer w-full text-black">
+                <p class="text-[16px] md:text-[18px] font-bold tracking-[0.2em] uppercase mb-8 md:mb-12">행복을 그리는 / 김정미</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 border-t border-black/20 pt-10 text-[13px] leading-relaxed">
+                    <div class="flex gap-8 md:gap-16 items-start">
+                        <span class="font-bold w-12 md:w-16 flex-shrink-0">Vision.</span>
+                        <div class="flex-grow space-y-2">
+                            <p>익숙한 것에 머물기보다 <br class="hidden md:block"> 새로운 가능성에 설렘을 느끼며, <span class="font-bold">행복</span>을 그립니다.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-8 md:gap-16 items-start border-t border-black/20 pt-10 md:border-t-0 md:border-l md:pl-16 md:pt-0">
+                        <span class="font-bold w-12 md:w-16 flex-shrink-0">Stack.</span>
+                        <div class="flex-grow space-y-2">
+                            <p>Photoshop, Illustrator, Figma<br>Generative AI (Midjourney, Gemini), VS Code</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sec-about" class="h-section pt-40 pb-32 px-8 md:px-20">
+            <div class="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-0">
+                <div class="lg:col-span-4 pr-0 lg:pr-20">
+                    <h2 class="text-[13px] font-bold tracking-[0.3em] text-[#febf14] mb-10 uppercase">About Me, Jeong mi</h2>
+                    <h1 class="text-[#ebebeb] font-bold text-5xl md:text-6xl leading-[1.15] tracking-tighter">
+                        같이를 만드는<br>행복한 디자이너.
+                    </h1>
+                    <p class="text-[#888] mt-12 leading-relaxed text-[15px] lg:text-[16px] max-w-sm">
+                        만드는 이의 행복이<br>경험하는 이의 행복으로 이어지는 디자인.<br><br>
+                        브랜드 가치와 사용자 경험을 잇는 과정 속에서,<br>AI라는 변화를 익숙함보다 설렘으로 마주합니다.<br>
+                        시간이 만든 노련함과<br>새로운 기술을 조화시키는 유연함을 바탕으로,<br>
+                        어제보다 더 나은 성장의 여정을 함께하고 싶습니다.
+                    </p>
+                </div>
+                <div class="lg:col-span-8 lg:pl-12 space-y-28">
+                    <div class="w-full space-y-28">
+                        <section>
+                            <h3 class="text-[11px] font-black tracking-widest uppercase text-gray-600 mb-3">Contact / Info</h3>
+                            <div class="border-t border-white/10 pt-10">
+                                <div class="max-w-2xl space-y-5">
+                                    <div class="flex gap-12 text-[15px] text-[#ebebeb]">
+                                        <span class="w-24 text-gray-600 uppercase text-[10px] pt-1 tracking-widest">Name</span>
+                                        <p class="font-medium">김정미 Kim Jeong Mi</p>
+                                    </div>
+                                    <div class="flex gap-12 text-[15px] text-[#ebebeb]">
+                                        <span class="w-24 text-gray-600 uppercase text-[10px] pt-1 tracking-widest">Phone</span>
+                                        <p class="font-medium">010-9269-3551</p>
+                                    </div>
+                                    <div class="flex gap-12 text-[15px] text-[#ebebeb]">
+                                        <span class="w-24 text-gray-600 uppercase text-[10px] pt-1 tracking-widest">Email</span>
+                                        <p class="font-medium underline underline-offset-4 decoration-white/20">waiting555@naver.com</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <section>
+                            <h3 class="text-[11px] font-black tracking-widest uppercase text-gray-600 mb-3">Technical Skills</h3>
+                            <div class="border-t border-white/10 pt-10">
+                                <div class="max-w-2xl">
+                                    <div class="flex flex-wrap gap-2.5">
+                                        <span class="skill-tag">Photoshop</span>
+                                        <span class="skill-tag">Figma</span>
+                                        <span class="skill-tag">Generative AI (Midjourney, Gemini)</span>
+                                        <span class="skill-tag">Visual Studio Code</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <section>
+                            <h3 class="text-[11px] font-black tracking-widest uppercase text-gray-600 mb-3">Experience</h3>
+                            <div class="border-t border-white/10 pt-10">
+                                <div class="max-w-2xl space-y-14">
+                                    <div class="flex gap-12 text-[#ebebeb]">
+                                        <span class="w-24 text-gray-600 text-[12px] pt-1 tracking-tighter">2010 — 2026</span>
+                                        <div>
+                                            <p class="font-bold text-[19px] leading-none">메가존 (펜타클, 핀플로우)</p>
+                                            <p class="text-gray-500 text-[14px] mt-3">디자이너 (차장)</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-12 text-[#ebebeb]">
+                                        <span class="w-24 text-gray-600 text-[12px] pt-1 tracking-tighter">2009 — 2010</span>
+                                        <div>
+                                            <p class="font-bold text-[19px] leading-none">모그인터렉티브</p>
+                                            <p class="text-gray-500 text-[14px] mt-3">디자이너 (사원)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <section>
+                            <h3 class="text-[11px] font-black tracking-widest uppercase text-gray-600 mb-3">Education & License</h3>
+                            <div class="border-t border-white/10 pt-10">
+                                <div class="max-w-2xl space-y-5">
+                                    <div class="flex gap-12 text-[15px] text-[#ebebeb]">
+                                        <span class="w-24 text-gray-600 uppercase text-[10px] pt-1 tracking-widest">Edu</span>
+                                        <p class="font-medium">안성폴리텍여자대학 (전문학사)</p>
+                                    </div>
+                                    <div class="flex gap-12 text-[15px] text-[#ebebeb]">
+                                        <span class="w-24 text-gray-600 uppercase text-[10px] pt-1 tracking-widest">License</span>
+                                        <p class="font-medium">컴퓨터 그래픽스 운용 기능사, 워드프로세서 2급</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sec-work" class="h-section pt-40 pb-24 px-8 md:px-12">
+            <div class="max-w-[1800px] mx-auto">
+                <div class="filter-nav">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="Promotion">Promotion</button>
+                    <button class="filter-btn" data-filter="Proposal">Proposal</button>
+                    <button class="filter-btn" data-filter="Site">Site</button>
+                    <button class="filter-btn" data-filter="OOH">OOH</button>
+                </div>
+                <div id="project-list" class="project-grid mt-12">
+                    <p class="text-gray-500">Loading Projects...</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="project-detail" class="project-detail hidden">
+        <button id="detail-close" class="detail-close-btn">Close</button>
+        <div class="detail-inner">
+            <div class="detail-text">
+                <p id="detail-category" class="detail-category"></p>
+                <h2 id="detail-title" class="detail-title"></h2>
+                <p id="detail-description" class="detail-description"></p>
+            </div>
+            <div id="detail-images" class="detail-images"></div>
+        </div>
+    </div>
+
+    <div id="scroll-height"></div>
+
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@sanity/client'
+        import imageUrlBuilder from 'https://esm.sh/@sanity/image-url'
+        window.createClient = createClient;
+        window.imageUrlBuilder = imageUrlBuilder;
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
