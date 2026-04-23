@@ -26,7 +26,7 @@ body.index-view #main-gnb { background-color: transparent; backdrop-filter: none
 
 /* 어바웃, 워크 페이지에서 GNB 반투명 + 블러(Frosted Glass) 효과 */
 body.about-view #main-gnb, body.work-view #main-gnb {
-    background-color: rgba(16, 16, 16, 0.4); 
+    background-color: rgba(0, 0, 0, 0.7); /* 요청하신 완전 블랙(#000000) 베이스의 반투명 */
     backdrop-filter: blur(15px); 
     -webkit-backdrop-filter: blur(15px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -71,9 +71,9 @@ body.index-view .home-icon { color: #000; }
 }
 
 /* 섹션별 배경색 */
-#sec-index { z-index: 10; background-color: transparent; } /* 투명 배경 유지 (노란색 캔버스 보임) */
-#sec-about { z-index: 20; background-color: #101010; color: #ebebeb; transform: translateX(100vw); }
-#sec-work { z-index: 30; background-color: #101010; color: #ebebeb; transform: translateX(100vw); }
+#sec-index { z-index: 10; background-color: transparent; } 
+#sec-about { z-index: 20; background-color: #101010; color: #ebebeb; transform: translateX(100vw); } /* 요청하신 #101010 배경 */
+#sec-work { z-index: 30; background-color: #101010; color: #ebebeb; transform: translateX(100vw); } /* 요청하신 #101010 배경 */
 
 /* [모바일 전용 레이아웃: 완벽한 올 버티컬] */
 @media (max-width: 767px) {
@@ -81,7 +81,6 @@ body.index-view .home-icon { color: #000; }
         height: auto;
         overflow: visible;
         padding-bottom: 50px;
-        /* 핵심 수정: %를 쓰면 전체 높이가 되어 뭉개짐. 화면 딱 1칸인 vh로 변경 */
         transform: translateY(-100vh) !important;
     }
 
