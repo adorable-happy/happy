@@ -98,8 +98,9 @@ window.addEventListener('load', () => {
             const slideScroll = afterIntroScroll - pauseScroll;
             const p = slideScroll / moveScroll; 
 
+            // 🛠️ 오타가 수정된 영역 (p * 15vw -> p * 15}vw)
             if (secIndex) {
-                secIndex.style.transform = `scale(${1 - p * 0.05}) translateX(-${p * 15vw})`;
+                secIndex.style.transform = `scale(${1 - p * 0.05}) translateX(-${p * 15}vw)`;
                 secIndex.style.opacity = 1 - p * 0.8;
                 secIndex.style.overflowY = 'hidden';
             }
@@ -146,7 +147,6 @@ window.addEventListener('load', () => {
             if (secIndex) { secIndex.style.opacity = 0; secIndex.style.overflowY = 'hidden'; }
             if (secAbout) { secAbout.style.transform = `scale(0.95) translateX(-15vw)`; secAbout.style.opacity = 0; secAbout.style.overflowY = 'hidden'; }
             
-            // 🔥 [해결 포인트] Happy 뷰 활성화 시 세로스크롤이 정상 작동하도록 제어를 완화합니다.
             if (secWork) { 
                 secWork.style.transform = `translateX(0)`; 
                 secWork.style.overflowY = 'auto'; 
@@ -162,7 +162,6 @@ window.addEventListener('load', () => {
     window.addEventListener('resize', updateScroll);
     updateScroll();
 
-    // Sanity 클라이언트 로직 시작
     const createClient = window.createClient;
     const imageUrlBuilder = window.imageUrlBuilder;
 
@@ -190,8 +189,6 @@ window.addEventListener('load', () => {
             try {
                 allProjects = await client.fetch(`*[_type == "project"] | order(_createdAt desc)`);
                 renderProjects(allProjects);
-                
-                // 🔥 [해결 포인트] 데이터 렌더링이 완전히 끝난 직후 스크롤 계산을 강제로 한 번 더 실행시킵니다.
                 setTimeout(updateScroll, 100);
             } catch (err) {
                 console.error('프로젝트 로딩 실패:', err);
@@ -280,8 +277,6 @@ window.addEventListener('load', () => {
                     const filter = button.dataset.filter;
                     const filtered = filter === 'all' ? allProjects : allProjects.filter(p => p.category === filter);
                     renderProjects(filtered);
-                    
-                    // 🔥 [해결 포인트] 카테고리 필터를 눌렀을 때도 바뀐 높이를 다시 인지하게 스크롤 연산을 트리거합니다.
                     setTimeout(updateScroll, 50);
                 }, 400); 
             });
