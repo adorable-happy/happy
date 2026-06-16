@@ -208,7 +208,7 @@ window.addEventListener('load', () => {
             container.innerHTML = list.map(project => `
                 <div class="project-card" data-id="${project._id}">
                     <div class="img-box">
-                        ${project.mainImage ? `<img src="${urlFor(project.mainImage).width(800).url()}" alt="${project.title || ''}">` : ''}
+                        ${project.mainImage ? `<img src="${urlFor(project.mainImage).width(800).height(450).url()}" alt="${project.title || ''}">` : ''}
                     </div>
                     <div class="info">
                         <span class="cat">${project.category || ''}</span>
