@@ -132,7 +132,8 @@ window.addEventListener('load', () => {
             if (navAbout) navAbout.classList.add('active');
             if (navWork) navWork.classList.remove('active');
         }
-        else if (afterIntroScroll > (pauseScroll * 2) + moveScroll && afterIntroScroll <= (pauseScroll * 2) + (moveScroll * 2)) {
+        // 🔥 조건식 끝부분의 <= 를 < 로 수정했습니다.
+        else if (afterIntroScroll > (pauseScroll * 2) + moveScroll && afterIntroScroll < (pauseScroll * 2) + (moveScroll * 2)) {
             const slideScroll = afterIntroScroll - ((pauseScroll * 2) + moveScroll);
             const p = slideScroll / moveScroll; 
 
