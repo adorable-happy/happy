@@ -256,8 +256,8 @@ window.addEventListener('load', () => {
             const detailImageData = project.contentImages || project.detailImages || [];
             if (detailImageData.length > 0) {
                 detailImages.innerHTML = detailImageData.map(img => `
-                    <img src="${urlFor(img).width(1600).url()}" alt="detail">
-                `).join('');
+                    <img src="${urlFor(img).url()}" alt="detail"> 
+                `).join(''); // 🌟 .width(1600)을 지워서 원본 크기로 가져옵니다.
             } else {
                 detailImages.innerHTML = `<p class="text-white text-center py-10">상세 이미지가 없습니다.</p>`;
             }

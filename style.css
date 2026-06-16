@@ -127,7 +127,13 @@ body.index-view .home-icon { color: #000; }
 .detail-title { font-size: 56px; font-weight: 700; line-height: 1.1; margin-bottom: 40px; }
 .detail-description { max-width: 900px; font-size: 18px; line-height: 1.9; color: rgba(255,255,255,0.8); white-space: pre-line; }
 .detail-images { display: flex; flex-direction: column; gap: 60px; }
-.detail-images img { width: 100%; display: block; border-radius: 6px; }
+.detail-images img { 
+    max-width: 100%;   /* 🌟 원래 크기를 유지하되, 화면보다 크면 화면에 맞춤 */
+    height: auto;      /* 비율 유지 */
+    display: block; 
+    margin: 0 auto;    /* 🌟 이미지가 화면보다 작을 때 가운데 정렬 */
+    border-radius: 6px; 
+}
 
 @media (max-width: 768px) { 
     .project-detail { padding: 100px 20px 60px; } 
