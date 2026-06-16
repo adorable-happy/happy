@@ -1,11 +1,9 @@
 window.addEventListener('load', () => {
-    // 페이지 전환 레이어 초기화
     const transLayer = document.getElementById('page-transition-layer');
     if (transLayer) {
         requestAnimationFrame(() => { transLayer.style.left = '-100%'; });
     }
 
-    // 네비게이션 점프 이동 (딜레이 구간 반영하여 좌표 설정)
     window.scrollToSection = (index) => {
         const introScroll = window.innerHeight * 7.5;
         const pauseScroll = window.innerHeight * 1.5;
@@ -19,7 +17,6 @@ window.addEventListener('load', () => {
         window.scrollTo({ top: targetScroll, behavior: 'smooth' });
     };
 
-    // DOM 요소
     const scrollH = document.getElementById('scroll-height');
     const maskPath = document.getElementById('mask-path');
     const scrollGuide = document.getElementById('scroll-guide');
@@ -27,7 +24,7 @@ window.addEventListener('load', () => {
     const faceImg = document.getElementById('face-img');
     const expandCircle = document.getElementById('expanding-circle');
     const mainContent = document.getElementById('main-content');
-    const introContainer = document.getElementById('intro-container'); // 추가: 스마일 이미지 컨테이너
+    const introContainer = document.getElementById('intro-container');
     const gnb = document.getElementById('main-gnb');
     const navAbout = document.getElementById('nav-about');
     const navWork = document.getElementById('nav-work');
@@ -36,40 +33,37 @@ window.addEventListener('load', () => {
     const secAbout = document.getElementById('sec-about');
     const secWork = document.getElementById('sec-work');
 
-    // [1] 스크롤 계산 함수 (인트로 + 가로 스크롤 + 입체 화면 전환 + 세로 스크롤 제어)
     function updateScroll() {
-        const introScroll = window.innerHeight * 7.5; // 인트로 애니메이션
-        const pauseScroll = window.innerHeight * 1.5; // 잠시 멈추는 여유 구간
-        const moveScroll = window.innerHeight * 2; // 각 페이지가 덮이는데 필요한 스크롤
+        const introScroll = window.innerHeight * 7.5;
+        const pauseScroll = window.innerHeight * 1.5;
+        const moveScroll = window.innerHeight * 2;
 
-        // 전체 스크롤 길이 업데이트
         if (scrollH) {
             scrollH.style.height = `${introScroll + (pauseScroll * 2) + (moveScroll * 2) + window.innerHeight}px`;
         }
 
         const scrollTop = window.scrollY;
-        
-        // --- A. 인트로 애니메이션 ---
         const progress = Math.min(scrollTop / introScroll, 1);
+        
         if (progress <= 0.35) {
             const p1 = progress / 0.35;
             if (maskPath) maskPath.style.strokeDashoffset = 1700 * (1 - p1);
             if (circleSvg) circleSvg.style.opacity = 1;
             if (faceImg) faceImg.style.opacity = 0;
             if (scrollGuide) { scrollGuide.style.opacity = 1 - p1; scrollGuide.style.visibility = 'visible'; }
-            if (introContainer) introContainer.style.opacity = 1; // 스마일 보이기
+            if (introContainer) introContainer.style.opacity = 1;
         } else if (progress > 0.35 && progress <= 0.55) {
             const p2 = (progress - 0.35) / 0.2;
             if (faceImg) faceImg.style.opacity = p2;
             if (circleSvg) circleSvg.style.opacity = 1;
             if (scrollGuide) { scrollGuide.style.opacity = 0; scrollGuide.style.visibility = 'hidden'; }
-            if (introContainer) introContainer.style.opacity = 1; // 스마일 보이기
+            if (introContainer) introContainer.style.opacity = 1;
         } else if (progress > 0.55 && progress <= 0.8) {
             const p3 = (progress - 0.55) / 0.25;
             if (expandCircle) expandCircle.style.transform = `translate(-50%, -50%) scale(${p3 * 500})`;
             if (circleSvg) circleSvg.style.opacity = p3 > 0.9 ? 0 : 1;
             if (mainContent) mainContent.classList.add('invisible');
-            if (introContainer) introContainer.style.opacity = 1; // 스마일 보이기
+            if (introContainer) introContainer.style.opacity = 1;
         } else {
             const p4 = (progress - 0.8) / 0.2;
             if (mainContent) {
@@ -77,8 +71,6 @@ window.addEventListener('load', () => {
                 mainContent.style.transform = `translateY(${(p4 - 1) * 100}%)`;
             }
             if (p4 > 0.8 && gnb) { gnb.classList.remove('invisible'); gnb.style.opacity = 1; }
-            
-            // 🔥 추가된 로직: 모바일(768px 이하)에서 타이틀이 올라올 때 스마일 이미지 자연스럽게 페이드아웃
             if (introContainer) {
                 if (window.innerWidth <= 768) {
                     introContainer.style.opacity = Math.max(0, 1 - p4);
@@ -88,7 +80,6 @@ window.addEventListener('load', () => {
             }
         }
 
-        // --- B. 입체 가로 전환 애니메이션 및 세로 스크롤 잠금 제어 ---
         const afterIntroScroll = scrollTop - introScroll;
 
         if (afterIntroScroll <= 0) {
@@ -108,7 +99,7 @@ window.addEventListener('load', () => {
             const p = slideScroll / moveScroll; 
 
             if (secIndex) {
-                secIndex.style.transform = `scale(${1 - p * 0.05}) translateX(-${p * 15}vw)`;
+                secIndex.style.transform = `scale(${1 - p * 0.05}) translateX(-${p * 15vw})`;
                 secIndex.style.opacity = 1 - p * 0.8;
                 secIndex.style.overflowY = 'hidden';
             }
@@ -154,7 +145,12 @@ window.addEventListener('load', () => {
         else {
             if (secIndex) { secIndex.style.opacity = 0; secIndex.style.overflowY = 'hidden'; }
             if (secAbout) { secAbout.style.transform = `scale(0.95) translateX(-15vw)`; secAbout.style.opacity = 0; secAbout.style.overflowY = 'hidden'; }
-            if (secWork) { secWork.style.transform = `translateX(0)`; secWork.style.overflowY = 'auto'; }
+            
+            // 🔥 [해결 포인트] Happy 뷰 활성화 시 세로스크롤이 정상 작동하도록 제어를 완화합니다.
+            if (secWork) { 
+                secWork.style.transform = `translateX(0)`; 
+                secWork.style.overflowY = 'auto'; 
+            }
 
             document.body.className = 'work-view';
             if (navAbout) navAbout.classList.remove('active');
@@ -166,7 +162,7 @@ window.addEventListener('load', () => {
     window.addEventListener('resize', updateScroll);
     updateScroll();
 
-    // [2] Work Page (Sanity 연동 및 순차 등장 애니메이션)
+    // Sanity 클라이언트 로직 시작
     const createClient = window.createClient;
     const imageUrlBuilder = window.imageUrlBuilder;
 
@@ -194,6 +190,9 @@ window.addEventListener('load', () => {
             try {
                 allProjects = await client.fetch(`*[_type == "project"] | order(_createdAt desc)`);
                 renderProjects(allProjects);
+                
+                // 🔥 [해결 포인트] 데이터 렌더링이 완전히 끝난 직후 스크롤 계산을 강제로 한 번 더 실행시킵니다.
+                setTimeout(updateScroll, 100);
             } catch (err) {
                 console.error('프로젝트 로딩 실패:', err);
                 if (container) container.innerHTML = `<p class="text-red-500 text-center py-20 col-span-full">데이터 로드 실패</p>`;
@@ -202,7 +201,6 @@ window.addEventListener('load', () => {
 
         function renderProjects(list) {
             if (!container) return;
-            
             container.innerHTML = ''; 
             
             if (!list || list.length === 0) {
@@ -224,9 +222,7 @@ window.addEventListener('load', () => {
 
             const cards = container.querySelectorAll('.project-card');
             cards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.classList.add('is-visible');
-                }, index * 100);
+                setTimeout(() => { card.classList.add('is-visible'); }, index * 100);
             });
 
             bindProjectClicks();
@@ -284,6 +280,9 @@ window.addEventListener('load', () => {
                     const filter = button.dataset.filter;
                     const filtered = filter === 'all' ? allProjects : allProjects.filter(p => p.category === filter);
                     renderProjects(filtered);
+                    
+                    // 🔥 [해결 포인트] 카테고리 필터를 눌렀을 때도 바뀐 높이를 다시 인지하게 스크롤 연산을 트리거합니다.
+                    setTimeout(updateScroll, 50);
                 }, 400); 
             });
         });
