@@ -1,4 +1,7 @@
 window.addEventListener('load', () => {
+    // 🌟 새로고침 시 브라우저가 임의로 스크롤을 복원하는 기능을 끄고 맨 위에서 시작하게 합니다.
+    if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+
     // 페이지 전환 레이어 초기화
     const transLayer = document.getElementById('page-transition-layer');
     if (transLayer) {
@@ -132,8 +135,8 @@ window.addEventListener('load', () => {
             if (navAbout) navAbout.classList.add('active');
             if (navWork) navWork.classList.remove('active');
         }
-        // 🔥 조건식 끝부분의 <= 를 < 로 수정했습니다.
-        else if (afterIntroScroll > (pauseScroll * 2) + moveScroll && afterIntroScroll < (pauseScroll * 2) + (moveScroll * 2)) {
+        // 끝부분의 <= 기호를 < 로 바꾸고 뒤에 - 10 을 붙여 안전 마진을 확보합니다.
+        else if (afterIntroScroll > (pauseScroll * 2) + moveScroll && afterIntroScroll < (pauseScroll * 2) + (moveScroll * 2) - 10) {
             const slideScroll = afterIntroScroll - ((pauseScroll * 2) + moveScroll);
             const p = slideScroll / moveScroll; 
 
