@@ -39,9 +39,9 @@ window.addEventListener('load', () => {
         const moveScroll = window.innerHeight * 2;
 
         if (scrollH) {
-            scrollH.style.height = `${introScroll + (pauseScroll * 2) + (moveScroll * 2) + window.innerHeight}px`;
-        }
-
+        // 🔥 pauseScroll을 3으로 늘려 마지막에 여유 스크롤 공간을 확보합니다.
+             scrollH.style.height = `${introScroll + (pauseScroll * 3) + (moveScroll * 2) + window.innerHeight}px`;
+}
         const scrollTop = window.scrollY;
         const progress = Math.min(scrollTop / introScroll, 1);
         
