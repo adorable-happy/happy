@@ -125,17 +125,32 @@ window.addEventListener('load', () => {
         }
         // --- [핵심 반영] Happy 페이지 완전 활성화 시 세로 스크롤 보장 ---
         else {
-            if (secIndex) { secIndex.style.opacity = 0; secIndex.style.overflowY = 'hidden'; }
-            if (secAbout) { secAbout.style.transform = `scale(0.95) translateX(-15vw)`; secAbout.style.opacity = 0; secAbout.style.overflowY = 'hidden'; }
-            if (secWork) { 
-                secWork.style.transform = `translateX(0)`; 
-                secWork.style.overflowY = 'auto'; // 리스트가 창 크기를 넘어갈 때 자연스러운 스크롤 허용
-                secWork.style.height = '100vh';   // 스크롤 가두기 및 고정 명시
-            }
-            document.body.className = 'work-view';
-            if (navAbout) navAbout.classList.remove('active');
-            if (navWork) navWork.classList.add('active');
-        }
+
+    if (secIndex) {
+        secIndex.style.opacity = 0;
+        secIndex.style.overflowY = 'hidden';
+    }
+
+    if (secAbout) {
+        secAbout.style.transform = `scale(0.95) translateX(-15vw)`;
+        secAbout.style.opacity = 0;
+        secAbout.style.overflowY = 'hidden';
+    }
+
+    if (secWork) {
+        secWork.style.transform = `translateX(0)`;
+        secWork.style.opacity = 1;
+
+        // Happy 페이지 세로 스크롤 허용
+        secWork.style.overflowY = 'auto';
+        secWork.style.pointerEvents = 'auto';
+    }
+
+    document.body.className = 'work-view';
+
+    if (navAbout) navAbout.classList.remove('active');
+    if (navWork) navWork.classList.add('active');
+}
     }
 
     window.addEventListener('scroll', updateScroll);
