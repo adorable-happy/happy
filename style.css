@@ -70,17 +70,7 @@ body.index-view .home-icon { color: #000; }
 /* 섹션별 배경색 */
 #sec-index { z-index: 10; background-color: transparent; }
 #sec-about { z-index: 20; background-color: #101010; color: #ebebeb; transform: translateX(100vw); }
-#sec-work {
-    z-index: 30;
-    background-color: #101010;
-    color: #ebebeb;
-    transform: translateX(100vw);
-
-    height: auto !important;
-    min-height: 100vh;
-    overflow-y: visible !important;
-    padding-bottom: 200px;
-}
+#sec-work { z-index: 30; background-color: #101010; color: #ebebeb; transform: translateX(100vw); }
 
 /* --- [4] ABOUT & WORK 페이지 공통 요소 --- */
 .skill-tag { 
@@ -103,11 +93,9 @@ body.index-view .home-icon { color: #000; }
     .filter-nav .filter-btn[data-filter="all"] { flex-basis: 100%; text-align: left; }
 }
 
-.project-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 80px;
-}
+.project-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 40px; }
+@media (min-width: 768px) { .project-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1200px) { .project-grid { grid-template-columns: repeat(3, 1fr); gap: 60px 40px; } }
 
 .project-card { 
     cursor: pointer; opacity: 0; transform: translateY(40px);
@@ -166,3 +154,18 @@ body.index-view .home-icon { color: #000; }
 .wheel { width: 2px; height: 7px; background: #fff; position: absolute; top: 6px; left: 50%; transform: translateX(-50%); animation: wheel-move 1.6s infinite; }
 @keyframes wheel-move { 0% { opacity: 1; top: 6px; } 100% { opacity: 0; top: 20px; } }
 .guide-text { font-size: 10px; letter-spacing: 0.15em; font-weight: 500; opacity: 0.7; text-transform: uppercase; }
+
+/* Happy 페이지 세로 스크롤 보정 */
+
+body.work-view {
+    overflow-y: auto;
+}
+
+#sec-work {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+#project-list {
+    min-height: 100%;
+}
