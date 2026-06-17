@@ -196,7 +196,8 @@ window.addEventListener('load', () => {
 
         async function fetchProjects() {
             try {
-                allProjects = await client.fetch(`*[_type == "project"] | order(_createdAt desc)`);
+                // 변경: 제작 연도(year) 최근 순으로 정렬하되, 연도가 같으면 최신 등록순(_createdAt desc)으로 2차 정렬
+                allProjects = await client.fetch(`*[_type == "project"] | order(year desc, _createdAt desc)`);
                 renderProjects(allProjects);
             } catch (err) {
                 console.error('프로젝트 로딩 실패:', err);
